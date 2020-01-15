@@ -1,0 +1,40 @@
+# 配置文件请严格遵循yaml语法格式，yaml学习地址:
+#  https://ansible-tran.readthedocs.io/en/latest/docs/YAMLSyntax.html
+#  http://einverne.github.io/post/2015/08/yaml.html
+
+# 定时时间
+# cron 对应任务设定 00 08 * * *
+morning_alarm_timed: '08:00'
+# cron 对应任务设定 30 10 * * *
+evening_alarm_timed: '10:30'
+
+# 格言渠道
+morning_dictum_channel: '天行Life(早安心语 and 天气预报)'
+evening_dictum_channel: '天行Life(晚安心语 and 土味情话)'
+
+# text_emoji_file
+text_emoji_file: 'text_emoji.txt'
+
+# 需要在本目录创建 tx_api_key 文件，并在第一行写入自己的API Key（API Key请前往 https://www.tianapi.com/ 注册获取）
+tx_api_key_file: 'tx_api_key'
+# 需要在本目录创建 tx_api_key 文件，并在第一行写入网易邮箱的授权码
+email_smtp_pwd_file: 'email_smtp_pwd'
+
+email_infos:
+  -
+    # 需要在本目录创建 email 文件，第一个 email 地址为 sender email，之后的 email 地址为 receiver email
+    email_file: 'email'
+    # 短信的开头称呼
+    gf_name: '迪迪'
+    # 所在城市，用于获取天气
+    city_name: '海淀'
+    # 从那天开始勾搭的（可空）
+    start_date: '2019-12-17'
+    # 短信的最后留言（可空）
+    sweet_words: '爱你的小田田 '
+
+#  - # 如果需要多对情侣，则按照如下格式继续扩展
+#    phone_number_file: 'phone_numer file_name'
+#    city_name: 'xx'
+#    start_date: 'xxxx-xx-xx'
+#    sweet_words: '来自最爱你的宝贝！'

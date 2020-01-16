@@ -137,7 +137,7 @@ class GFEverydayEmail:
         :param url: 请求地址
         :param k: 请求类型
         :param file_name: 缓存文件名
-        :return: url返回值
+        :return: url返回内容的处理结果
         '''
         print("*" * 10 + "getting url info" + "*" * 10)
         if(os.path.exists(file_path)):
@@ -145,14 +145,28 @@ class GFEverydayEmail:
             with open(file_path, "r") as file:
                 content = json.load(file)
         else:
-            print("request url: ", url)
-            resp = requests.get(url)
-            content = json.loads(resp.text)
-            if content:
-                print(content)
-            with open(file_path, "w") as file:
-                file.write(json.dumps(content))
+            while True:
+                print("request url: ", url)
+                resp = requests.get(url)
+                content = json.loads(resp.text)
+                if content:
+                    print(content)
+                if content['code'] == 200:
+                    with open(file_path, "w") as file:
+                        file.write(json.dumps(content))
+                    break
+                else:
+                    print("req error, sleep 1 second and retry...")
+                    time.sleep(1)
+        return self.execute_contents(k, content)
 
+    def execute_contents(self, k, content):
+        '''
+        处理从api得到的content，并返回所需要的msg
+        :param k: 请求类型
+        :param content: url返回内容
+        :return: url返回内容的处理结果
+        '''
         c = content['newslist'][0]
         if k == "tianqi":
             msg = f"***天气预报来袭~~~\n" \

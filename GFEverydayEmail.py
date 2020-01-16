@@ -126,7 +126,6 @@ class GFEverydayEmail:
                 if not send_test:
                     for receiver in email["email_list"][1:]:
                         self.send_email(email["email_list"][0], receiver, email_title, email_msg)
-                        time.sleep(5)
                 else:
                     print(f"发送给{email['email_list'][1:]}成功:\n", email_msg)
                 return

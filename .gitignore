@@ -5,3 +5,5 @@ phone_number
 email_smtp_pwd
 email
 cache
+test.*
+

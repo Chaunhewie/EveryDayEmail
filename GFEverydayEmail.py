@@ -8,13 +8,15 @@ from email.header import Header
 from TXAPI import TXAPI
 
 class GFEverydayEmail:
-    # 注意：顺序影响短信编辑
+    # 注意：顺序影响短信编辑(和TXAPI中的urls的key相对应)
     zaoan_apis = ["zaoan", "theone", "tianqi"]
     wanan_apis = ["qinghua", "wanan"]
+    email_html_model_file_name = "email_html_model.html"
 
     def __init__(self):
         self.email_list, self.dictum_channels, self.text_emoji_file, tx_api_key, self.email_smtp_pwd = self.get_init_data()
         self.tx_api = TXAPI(tx_api_key)
+        self.date_str = date.today().strftime('%Y-%m-%d')
 
     def get_init_data(self):
         '''
@@ -86,36 +88,36 @@ class GFEverydayEmail:
         print("*" * 20 + "start_today_info" + "*" * 20)
         print("chat_id:", chat_id, "send_test:", send_test)
         print("获取相关信息...")
-        date_str = date.today().strftime('%Y-%m-%d')
         for email in self.email_list:
-            days = (datetime.strptime(date_str, '%Y-%m-%d') - datetime.strptime(email["start_date"], '%Y-%m-%d')).days
+            days = (datetime.strptime(self.date_str, '%Y-%m-%d') - datetime.strptime(email["start_date"], '%Y-%m-%d')).days
             # 判断早安还是晚安
             if chat_id == 0:
-                email_msg = f"{email['gf_name']}，今天是我们相恋的第{days}天！想你~\n"
+                email_msg = f"<p>{email['gf_name']}，今天是我们相恋的第{days}天！想你~</p>\n"
                 email_title = "迪迪早安~"
                 apis = self.zaoan_apis
-            elif(chat_id == 1):
-                email_msg = f"{email['gf_name']}，我们相恋的第{days}天就要结束啦！爱你~\n"
+            elif chat_id == 1:
+                email_msg = f"<p>{email['gf_name']}，我们相恋的第{days}天就要结束啦！爱你~</p>\n"
                 email_title = "迪迪晚安~"
                 apis = self.wanan_apis
             else:
                 print("Wrong chat id!!!")
                 return
             # 构建短信
-            for k in apis:
-                email_msg += self.tx_api.get_channel_msg(k, date_str, email["city_name"])
+            for channel in apis:
+                email_msg += self.tx_api.get_channel_msg(channel, self.date_str, email["city_name"])
             email_msg += email['sweet_words']
             email_msg += self.get_text_emoji()
             # 发送短信
             if len(email["email_list"]) <= 0:
-                print("No Phone Number with msg:", email_msg)
+                print("No Email Number with msg:", email_msg)
                 return
             else:
+                email_body = self.get_email_body(email_msg)
                 if not send_test:
                     for receiver in email["email_list"][1:]:
-                        self.send_email(email["email_list"][0], receiver, email_title, email_msg)
+                        self.send_email(email["email_list"][0], receiver, email_title, email_body)
                 else:
-                    print(f"发送给{email['email_list'][1:]}成功:\n", email_msg)
+                    print(f"发送给{email['email_list'][1:]}成功:\n", email_body)
                 return
 
     def get_text_emoji(self):
@@ -130,11 +132,16 @@ class GFEverydayEmail:
             if len(line) > 0:
                 text_emoji.append(line)
         return random.choice(text_emoji)
-        
-    def send_email(self, sender, receiver, email_title, email_msg):
+
+    def get_email_body(self, email_msg):
+        with open(self.email_html_model_file_name, 'r') as f:
+            email_body = f.read()
+        return email_body.format(bg_img_url=self.tx_api.get_the_one_img(self.date_str), email_msg=email_msg)
+
+    def send_email(self, sender, receiver, email_title, email_body):
         print("*" * 10 + "sending email" + "*" * 10)
 
-        message = MIMEText(email_msg, 'plain', 'utf-8')
+        message = MIMEText(email_body, 'html', 'utf-8')
         message['From'] = Header('小田助手', 'utf-8')
         message['To'] = Header('最爱的迪迪', 'utf-8')
         message['Subject'] = Header(email_title, 'utf-8')
@@ -150,14 +157,16 @@ class GFEverydayEmail:
             server.login(sender, self.email_smtp_pwd)
             server.sendmail(sender, receiver, message.as_string())
             server.close()
-            print(f"发送给{receiver}成功:\n", email_msg)
+            print(f"发送给{receiver}成功:\n", email_body)
         except smtplib.SMTPException as e:
             print("Failed to sent email:\n" + str(e))
             print(message.as_string())
-            print(email_msg)
+            print(email_body)
 
 
 if __name__ == '__main__':
     g = GFEverydayEmail()
-    g.start_today_info(0, send_test=True)
-    g.start_today_info(1, send_test=True)
+    # g.start_today_info(0, send_test=True)
+    # g.start_today_info(1, send_test=True)
+    g.start_today_info(0, send_test=False)
+    g.start_today_info(1, send_test=False)

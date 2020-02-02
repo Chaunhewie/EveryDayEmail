@@ -104,9 +104,9 @@ class GFEverydayEmail:
                 return
             # 构建短信
             for channel in apis:
-                email_msg += self.tx_api.get_channel_msg(channel, self.date_str, email["city_name"])
-            email_msg += email['sweet_words']
-            email_msg += self.get_text_emoji()
+                email_msg += "        " + self.tx_api.get_channel_msg(channel, self.date_str, email["city_name"])
+            email_msg += "        <p>" + email['sweet_words']
+            email_msg += self.get_text_emoji() + "</p>"
             # 发送短信
             if len(email["email_list"]) <= 0:
                 print("No Email Number with msg:", email_msg)

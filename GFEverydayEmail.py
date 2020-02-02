@@ -166,7 +166,7 @@ class GFEverydayEmail:
 
 if __name__ == '__main__':
     g = GFEverydayEmail()
-    # g.start_today_info(0, send_test=True)
-    # g.start_today_info(1, send_test=True)
-    g.start_today_info(0, send_test=False)
-    g.start_today_info(1, send_test=False)
+    g.start_today_info(0, send_test=True)
+    g.start_today_info(1, send_test=True)
+    # g.start_today_info(0, send_test=False)
+    # g.start_today_info(1, send_test=False)

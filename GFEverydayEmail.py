@@ -129,6 +129,7 @@ class GFEverydayEmail:
         with open(self.text_emoji_file, "r", encoding="utf-8") as file:
             lines = file.readlines()
         for line in lines:
+            line = line.strip()
             if len(line) > 0:
                 text_emoji.append(line)
         return random.choice(text_emoji)

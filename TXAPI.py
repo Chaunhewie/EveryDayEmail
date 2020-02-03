@@ -2,7 +2,7 @@ import os
 import time
 import json
 import requests
-
+from datetime import datetime, date, timedelta
 
 class TXAPI:
     weather_types = {"风": 1, "云": 2, "雨": 3, "雪": 4, "霜": 5, "露": 6, "雾": 7, "雷": 8, "晴": 9, "阴": 10,
@@ -20,7 +20,9 @@ class TXAPI:
         if channel == "tianqi":
             url = self.urls[channel].format(self.tx_api_key, city_name)
         elif channel == "theone":
-            url = self.urls[channel].format(self.tx_api_key, date_str)
+            days_before = datetime.today() + timedelta(-3)
+            the_one_date_str = days_before.strftime('%Y-%m-%d')
+            url = self.urls[channel].format(self.tx_api_key, the_one_date_str)
         else:
             url = self.urls[channel].format(self.tx_api_key)
         content = self.get_url_info(url, "./cache/" + channel + "/" + date_str + ".txt")

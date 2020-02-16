@@ -107,7 +107,7 @@ class TXAPI:
         if channel == "tianqi":
             msg = f"<p>***天气预报来袭~~~<br>" \
                   f"***{c['date']} {c['week']}<br>" \
-                  f"***今日{c['weather']}\n" \
+                  f"***今日{c['weather']}<br>" \
                   f"***气温{c['lowest']}/{c['highest']}，当前气温{c['real']}<br>" \
                   f"***风力{c['windspeed']}<br>" \
                   f"***空气质量 {c['air_level']}</p>\n"

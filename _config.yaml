@@ -13,7 +13,9 @@ morning_dictum_channel: '天行Life(早安心语 and 天气预报)'
 evening_dictum_channel: '天行Life(晚安心语 and 土味情话)'
 
 # text_emoji_file
-text_emoji_file: 'text_emoji.txt'
+text_emoji_file: './resources/text_emoji.txt'
+# lyrics_file
+lyrics_file: './resources/lyrics/JayChou/all_lyrics.txt'
 
 # 需要在本目录创建 tx_api_key 文件，并在第一行写入自己的API Key（API Key请前往 https://www.tianapi.com/ 注册获取）
 tx_api_key_file: 'tx_api_key'

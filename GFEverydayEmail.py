@@ -1,5 +1,6 @@
 # coding=utf-8
 from datetime import datetime, date
+import os
 import yaml
 import random
 import smtplib
@@ -8,13 +9,13 @@ from email.header import Header
 from TXAPI import TXAPI
 
 class GFEverydayEmail:
-    # 注意：顺序影响短信编辑(和TXAPI中的urls的key相对应)
+    # 注意：顺序影响邮件编辑(和TXAPI中的urls的key相对应)
     zaoan_apis = ["zaoan", "theone", "tianqi"]
-    wanan_apis = ["qinghua", "wanan"]
+    wanan_apis = ["lyrics", "wanan"]  # qinghua 接口舍弃
     email_html_model_file_name = "email_html_model.html"
 
     def __init__(self):
-        self.email_list, self.dictum_channels, self.text_emoji_file, tx_api_key, self.email_smtp_pwd = self.get_init_data()
+        self.email_list, self.dictum_channels, self.text_emoji_file, self.lyrics_file, tx_api_key, self.email_smtp_pwd = self.get_init_data()
         self.tx_api = TXAPI(tx_api_key)
         self.date_str = date.today().strftime('%Y-%m-%d')
 
@@ -36,6 +37,9 @@ class GFEverydayEmail:
 
         text_emoji_file = config.get('text_emoji_file', '')
         init_msg += f"text_emoji文件名：{text_emoji_file}\n"
+
+        lyrics_file = config.get('lyrics_file', '')
+        init_msg += f"lyrics文件名：{lyrics_file}\n"
 
         email_list = []
         email_infos = config.get('email_infos')
@@ -76,7 +80,7 @@ class GFEverydayEmail:
         print(u"*" * 25 + "init msg" + u"*" * 25)
         print(init_msg)
 
-        return email_list, dictum_channels, text_emoji_file, tx_api_key, email_smtp_pwd
+        return email_list, dictum_channels, text_emoji_file, lyrics_file, tx_api_key, email_smtp_pwd
 
     def start_today_info(self, chat_id, send_test=False):
         '''
@@ -102,12 +106,15 @@ class GFEverydayEmail:
             else:
                 print("Wrong chat id!!!")
                 return
-            # 构建短信
+            # 构建邮件
             for channel in apis:
-                email_msg += "        " + self.tx_api.get_channel_msg(channel, self.date_str, email["city_name"])
+                if channel == "lyrics":
+                    email_msg += "        " + self.get_jaychou_lyrics()
+                else:
+                    email_msg += "        " + self.tx_api.get_channel_msg(channel, self.date_str, email["city_name"])
             email_msg += "        <p>" + email['sweet_words']
             email_msg += self.get_text_emoji() + "</p>"
-            # 发送短信
+            # 发送邮件
             if len(email["email_list"]) <= 0:
                 print("No Email Number with msg:", email_msg)
                 return
@@ -133,6 +140,48 @@ class GFEverydayEmail:
             if len(line) > 0:
                 text_emoji.append(line)
         return random.choice(text_emoji)
+
+    def get_jaychou_lyrics(self):
+        '''
+        获取爬取的周杰伦的歌词
+        :return: str lyrics
+        '''
+        print("-----------get_jaychou_lyrics----------- ")
+        temp_file = self.get_temp_file_path(self.lyrics_file)
+
+        with open(self.lyrics_file, "r", encoding="utf-8") as file:
+            lines = file.read().split("\n\n")
+        lyrics = lines.pop(0).strip()
+        while len(lyrics) <= 0:
+            if len(lines) <= 0:
+                return ""
+            lyrics = lines.pop(0)
+        lines.append(lyrics)
+        with open(temp_file, "w", encoding="utf-8") as file:
+            for line in lines:
+                line = line.strip()
+                if len(line) <= 0:
+                    continue
+                file.write(line)
+                file.write("\n\n")
+        os.remove(self.lyrics_file)
+        os.rename(temp_file, self.lyrics_file)
+        lyrics = "<p>" + lyrics.strip().replace("\n", "<br>") + "</p>\n"
+        print(lyrics)
+        return lyrics
+
+
+    def get_temp_file_path(self, path):
+        '''
+        获取临时路径，在原路径中找到filename,加上前缀“__”
+        :param path: 原路径
+        :return: temp_file_path
+        '''
+        path_splited = path.split("/")
+        temp_file_name = "__" + path_splited[-1]
+        path_splited = [path + "/" for path in path_splited[:-1]]
+        path_splited.append(temp_file_name)
+        return "".join(path_splited)
 
     def get_email_body(self, email_msg):
         with open(self.email_html_model_file_name, 'r') as f:
@@ -167,7 +216,8 @@ class GFEverydayEmail:
 
 if __name__ == '__main__':
     g = GFEverydayEmail()
-    g.start_today_info(0, send_test=True)
-    g.start_today_info(1, send_test=True)
+    # g.start_today_info(0, send_test=True)
+    # g.start_today_info(1, send_test=True)
     # g.start_today_info(0, send_test=False)
     # g.start_today_info(1, send_test=False)
+    # g.get_jaychou_lyrics()

@@ -27,7 +27,7 @@ class TXAPI:
             url = self.urls[channel].format(self.tx_api_key)
         content = self.get_url_info(url, "./cache/" + channel + "/" + date_str + ".txt")
         # return self.execute_contents(channel, content)
-        return self.execute_contents_for_html(channel, content)
+        return self.execute_contents_for_html(channel, content, date_str)
 
     def get_the_one_img(self, date_str, channel="theone"):
         print("*" * 10 + "getting the one img" + "*" * 10)
@@ -63,40 +63,40 @@ class TXAPI:
                     time.sleep(1)
         return content
 
-    def execute_contents(self, channel, content):
+    def execute_contents(self, channel, content, date_str=""):
         '''
         处理从api得到的content，并返回所需要的txt格式的msg
         :param channel: 请求类型
         :param content: url返回内容
         :return: url返回内容的处理结果
         '''
-        c = content['newslist'][0]
+        c = content.get('newslist', [{}])[0]
         if channel == "tianqi":
             msg = f"***天气预报来袭~~~\n" \
-                  f"***{c['date']} {c['week']}\n" \
-                  f"***今日{c['weather']}\n" \
-                  f"***气温{c['lowest']}/{c['highest']}，当前气温{c['real']}\n" \
-                  f"***风力{c['windspeed']}\n" \
-                  f"***空气质量 {c['air_level']}\n"
+                  f"***{c.get('date', date_str)} {c.get('week', '')}\n" \
+                  f"***今日{c.get('weather', '-')}\n" \
+                  f"***气温{c.get('lowest', '-℃')}/{c.get('highest', '-℃')}，当前气温{c.get('real', '-℃')}\n" \
+                  f"***风力{c.get('windspeed', '-')}\n" \
+                  f"***空气质量 {c.get('air_level', '-')}\n"
         elif channel == "zaoan":
-            if "早安" in c["content"]:
-                msg = c["content"] + "\n"
+            if "早安" in c.get("content", ''):
+                msg = c.get("content", '') + "\n"
             else:
-                msg = "早安~\n" + c["content"] + "\n"
+                msg = "早安~\n" + c.get("content", '') + "\n"
         elif channel == "wanan":
-            if "晚安" in c["content"]:
-                msg = c["content"] + "\n"
+            if "晚安" in c.get("content", ''):
+                msg = c.get("content", '') + "\n"
             else:
-                msg = c["content"] + "\n晚安~\n"
+                msg = c.get("content", '') + "\n晚安~\n"
         elif channel == "qinghua":
-            msg = c["content"] + "\n"
+            msg = c.get("content", '') + "\n"
         elif channel == "theone":
-            msg = c["word"] + "\n"
+            msg = c.get("word", '') + "\n"
         else:
-            msg = c["content"] + "\n"
+            msg = c.get("content", '') + "\n"
         return msg
 
-    def execute_contents_for_html(self, channel, content):
+    def execute_contents_for_html(self, channel, content, date_str=''):
         '''
         处理从api得到的content，并返回所需要的html格式的msg
         :param channel: 请求类型
@@ -106,25 +106,25 @@ class TXAPI:
         c = content['newslist'][0]
         if channel == "tianqi":
             msg = f"<p>***天气预报来袭~~~<br>" \
-                  f"***{c['date']} {c['week']}<br>" \
-                  f"***今日{c['weather']}<br>" \
-                  f"***气温{c['lowest']}/{c['highest']}，当前气温{c['real']}<br>" \
-                  f"***风力{c['windspeed']}<br>" \
-                  f"***空气质量 {c['air_level']}</p>\n"
+                  f"***{c.get('date', date_str)} {c.get('week', '')}<br>" \
+                  f"***今日{c.get('weather', '-')}<br>" \
+                  f"***气温{c.get('lowest', '-℃')}/{c.get('highest', '-℃')}，当前气温{c.get('real', '-℃')}<br>" \
+                  f"***风力{c.get('windspeed', '-')}<br>" \
+                  f"***空气质量 {c.get('air_level', '-')}</p>\n"
         elif channel == "zaoan":
-            if "早安" in c["content"]:
-                msg = "<p>" + c["content"] + "</p>\n"
+            if "早安" in c.get("content", ''):
+                msg = "<p>" + c.get("content", '') + "</p>\n"
             else:
-                msg = "<p>早安~<br>" + c["content"] + "</p>\n"
+                msg = "<p>早安~<br>" + c.get("content", '') + "</p>\n"
         elif channel == "wanan":
-            if "晚安" in c["content"]:
-                msg = "<p>" + c["content"] + "</p>\n"
+            if "晚安" in c.get("content", ''):
+                msg = "<p>" + c.get("content", '')+ "</p>\n"
             else:
-                msg = "<p>" + c["content"] + "<br>晚安~</p>\n"
+                msg = "<p>" + c.get("content", '') + "<br>晚安~</p>\n"
         elif channel == "qinghua":
-            msg = "<p>" + c["content"] + "</p>\n"
+            msg = "<p>" + c.get("content", '') + "</p>\n"
         elif channel == "theone":
-            msg = "<p>" + c["word"] + "</p>\n"
+            msg = "<p>" + c.get("word", '') + "</p>\n"
         else:
-            msg = "<p>" + c["content"] + "</p>\n"
+            msg = "<p>" + c.get("content", '') + "</p>\n"
         return msg

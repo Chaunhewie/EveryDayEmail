@@ -97,11 +97,11 @@ class GFEverydayEmail:
             # 判断早安还是晚安
             if chat_id == 0:
                 email_msg = f"<p>{email['gf_name']}，今天是我们相恋的第{days}天！想你~</p>\n"
-                email_title = "迪迪早安~"
+                email_title = email['gf_name'] + "早安~"
                 apis = self.zaoan_apis
             elif chat_id == 1:
                 email_msg = f"<p>{email['gf_name']}，我们相恋的第{days}天就要结束啦！爱你~</p>\n"
-                email_title = "迪迪晚安~"
+                email_title = email['gf_name'] + "晚安~"
                 apis = self.wanan_apis
             else:
                 print("Wrong chat id!!!")
@@ -115,14 +115,14 @@ class GFEverydayEmail:
             email_msg += "        <p>" + email['sweet_words']
             email_msg += self.get_text_emoji() + "</p>"
             # 发送邮件
-            if len(email["email_list"]) <= 0:
+            if len(email['email_list']) <= 0:
                 print("No Email Number with msg:", email_msg)
                 return
             else:
                 email_body = self.get_email_body(email_msg)
                 if not send_test:
-                    for receiver in email["email_list"][1:]:
-                        self.send_email(email["email_list"][0], receiver, email_title, email_body)
+                    for receiver in email['email_list'][1:]:  # 第一个为发送方，后续的为接收方
+                        self.send_email(email['email_list'][0], receiver, email_title, email_body, email['gf_name'])
                 else:
                     print(f"发送给{email['email_list'][1:]}成功:\n", email_body)
                 return
@@ -188,12 +188,12 @@ class GFEverydayEmail:
             email_body = f.read()
         return email_body.format(bg_img_url=self.tx_api.get_the_one_img(self.date_str), email_msg=email_msg)
 
-    def send_email(self, sender, receiver, email_title, email_body):
+    def send_email(self, sender, receiver, email_title, email_body, gf_name):
         print("*" * 10 + "sending email" + "*" * 10)
 
         message = MIMEText(email_body, 'html', 'utf-8')
         message['From'] = Header('小田助手', 'utf-8')
-        message['To'] = Header('最爱的迪迪', 'utf-8')
+        message['To'] = Header('最爱的' + gf_name, 'utf-8')
         message['Subject'] = Header(email_title, 'utf-8')
         try:
             ### 使用 SMTP 发送
@@ -216,8 +216,8 @@ class GFEverydayEmail:
 
 if __name__ == '__main__':
     g = GFEverydayEmail()
-    g.start_today_info(0, send_test=True)
-    g.start_today_info(1, send_test=True)
-    # g.start_today_info(0, send_test=False)
-    # g.start_today_info(1, send_test=False)
+    # g.start_today_info(0, send_test=True)
+    # g.start_today_info(1, send_test=True)
+    g.start_today_info(0, send_test=False)
+    g.start_today_info(1, send_test=False)
     # g.get_jaychou_lyrics()

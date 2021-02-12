@@ -27,11 +27,11 @@ email_infos:
     # 需要在本目录创建 email 文件，第一个 email 地址为 sender email，之后的 email 地址为 receiver email
     email_file: 'email'
     # 短信的开头称呼
-    gf_name: '迪迪'
+    gf_name: '倩倩'
     # 所在城市，用于获取天气
-    city_name: '海淀'
+    city_name: '霍州'
     # 从那天开始勾搭的（可空）
-    start_date: '2019-12-17'
+    start_date: '2021-02-01'
     # 短信的最后留言（可空）
     sweet_words: '爱你的小田田 '
 

@@ -94,6 +94,7 @@ class GFEverydayEmail:
         print("获取相关信息...")
         for email in self.email_list:
             days = (datetime.strptime(self.date_str, '%Y-%m-%d') - datetime.strptime(email["start_date"], '%Y-%m-%d')).days
+            days += 1
             # 判断早安还是晚安
             if chat_id == 0:
                 email_msg = f"<p>{email['gf_name']}，今天是我们相恋的第{days}天！想你~</p>\n"

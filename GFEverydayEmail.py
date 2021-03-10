@@ -1,4 +1,5 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
+
 from datetime import datetime, date
 import os
 import yaml
@@ -220,5 +221,5 @@ if __name__ == '__main__':
     # g.start_today_info(0, send_test=True)
     # g.start_today_info(1, send_test=True)
     g.start_today_info(0, send_test=False)
-    g.start_today_info(1, send_test=False)
+    # g.start_today_info(1, send_test=False)
     # g.get_jaychou_lyrics()

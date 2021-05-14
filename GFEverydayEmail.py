@@ -211,11 +211,22 @@ class GFEverydayEmail:
             print(message.as_string())
             print(email_body)
 
+    def send_test_html(self):
+        for email in self.email_list:
+            with open("test.html", 'r', encoding="utf-8") as f:
+                email_body = f.read()
+            email_title = email['gf_name'] + "Testing~"
+            for receiver in email['email_list'][1:]:  # 第一个为发送方，后续的为接收方
+                self.send_email(email['email_list'][0], receiver, email_title, email_body, email['gf_name'])
+        return
+
+
 
 if __name__ == '__main__':
     g = GFEverydayEmail()
-    g.start_today_info(0, send_test=True)
-    g.start_today_info(1, send_test=True)
+    # g.start_today_info(0, send_test=True)
+    # g.start_today_info(1, send_test=True)
     # g.start_today_info(0, send_test=False)
     # g.start_today_info(1, send_test=False)
     # g.get_jaychou_lyrics()
+    g.send_test_html()

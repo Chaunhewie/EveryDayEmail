@@ -40,7 +40,7 @@
     "霾": "DUST.svg"
   },
   "common": {
-      "温度": "THERMOMETER.png",
+    "温度": "THERMOMETER.png",
     "升温": "THERMOMETER_UP.png",
     "降温": "THERMOMETER_DOWN.png",
     "空气质量": "AIR.png",

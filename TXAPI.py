@@ -15,6 +15,7 @@ class TXAPI:
     cache_dir = "./cache/"
     weather_icons_dir = "./resources/weather"  # (.resources/weather | .resources/weather-black)
     weather_icons_mapping_file = "./resources/weather_names.json"  # 天气名字和天气icon的对应关系
+    weather_icons_git_path = "https://github.com/Chaunhewie/EveryDayEmail/tree/master/resources/weather"
 
     def __init__(self, tx_api_key, date_str):
         self.tx_api_key = tx_api_key

@@ -1,3 +1,3 @@
 cd ~/pywsp/EveryDayEmail
-python3 run.py 1
+/root/.conda/envs/p3/bin/python run.py 1
 

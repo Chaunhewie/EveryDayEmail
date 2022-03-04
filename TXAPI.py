@@ -6,6 +6,8 @@ from datetime import datetime, date, timedelta
 
 
 class TXAPI:
+    weather_icons = {"风": 1, "云": 2, "雨": 3, "雪": 4, "霜": 5, "露": 6, "雾": 7, "雷": 8, "晴": 9, "阴": 10,
+                     "feng": 1, "yun": 2, "yu": 3, "xue": 4, "shuang": 5, "lu": 6, "wu": 7, "lei": 8, "qing": 9, "yin": 10}
     urls = {"zaoan": 'http://api.tianapi.com/txapi/zaoan/index?key={0}',
             "tianqi": 'http://api.tianapi.com/txapi/tianqi/index?key={0}&city={1}',
             "aqi": 'http://api.tianapi.com/txapi/aqi/index?key={0}&area={1}',
@@ -146,11 +148,31 @@ class TXAPI:
             if "转" in d["newslist"][0]["weather"]:
                 w = d["newslist"][0]["weather"].split("转")
             else:
+                msg = "<p>" + c.get("content", '') + "<br>晚安~</p>\n"
+        elif channel == "qinghua":
+            msg = "<p>" + c.get("content", '') + "</p>\n"
+        elif channel == "theone":
+            msg = "<p>" + c.get("word", '') + "</p>\n"
+        else:
+            msg = "<p>" + c.get("content", '') + "</p>\n"
+        return msg
+
+    def test_show_tianqi(self):
+        files = os.listdir(os.path.join(self.cache_dir, "tianqi"))
+        tianqi = set()
+        for fname in files:
+            with open(os.path.join(self.cache_dir, "tianqi", fname), "r") as f:
+                d = json.load(f)
+            if "转" in d["newslist"][0]["weather"]:
+                w = d["newslist"][0]["weather"].split("转")
+            else:
                 w = [d["newslist"][0]["weather"]]
             for i in w:
                 tianqi.add(i)
         print(tianqi)
 
+# {'中雨转小雨', '小雨', '晴转小雨', '多云', '多云转晴', '中雨转多云', '暴雨转大雨', '晴', '晴转多云', '中雨', '阵雨转大雨', '小雨转多云', '阴转晴', '阴'
+# , '中雨转阵雨', '小雨转阴', '多云转小雨', '阴转小雨', '小雨转大雨'}
 
 if __name__ == "__main__":
     tx = TXAPI("")

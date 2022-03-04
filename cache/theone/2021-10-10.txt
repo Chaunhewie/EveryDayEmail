@@ -1,0 +1,1 @@
+{"code": 200, "msg": "success", "newslist": [{"oneid": 3334, "word": "\u5982\u679c\u4e0d\u80fd\u505a\u4e00\u4e2a\u7eaf\u7cb9\u7684\u597d\u4eba\uff0c\u4f46\u4e5f\u522b\u505a\u574f\u4eba\u3002", "wordfrom": "", "imgurl": "http://image.wufazhuce.com/FliFh0g7OnIkIdamJvsmDcKZzYKE", "imgauthor": "", "date": "2021-10-07"}]}

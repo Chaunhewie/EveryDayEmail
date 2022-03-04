@@ -1,0 +1,1 @@
+{"code": 200, "msg": "success", "newslist": [{"area": "\u6b66\u6c49", "area_code": "wuhan", "so2": "6", "o3": "34", "pm2_5": "26", "primary_pollutant": "\u9897\u7c92\u7269(PM10)", "co": "0.7", "num": "221", "no2": "55", "quality": "\u826f\u597d", "aqi": "53", "pm10": "56", "o3_8h": "72", "time": "2021-06-06 07:10:02.075"}]}

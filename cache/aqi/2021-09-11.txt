@@ -1,0 +1,1 @@
+{"code": 200, "msg": "success", "newslist": [{"area": "\u5317\u4eac", "area_code": "beijing", "so2": "3", "o3": "38", "pm2_5": "46", "primary_pollutant": "\u9897\u7c92\u7269(PM2.5)", "co": "1.0", "num": "315", "no2": "30", "quality": "\u826f\u597d", "aqi": "64", "pm10": "75", "o3_8h": "38", "time": "2021-09-11 07:10:01.852"}]}
